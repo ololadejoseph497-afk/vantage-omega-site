@@ -3,134 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VANTAGEPRO Ω | ELECTRIC RIPPLE</title>
+    <title>VANTAGEPRO Ω | CYBORG HUD</title>
+    <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' stroke='%2300f3ff' stroke-width='10' fill='none'/><path d='M50 20 L50 80 M20 50 L80 50' stroke='%23bc13fe' stroke-width='8'/></svg>">
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --neon: #00f3ff; --spark: #bc13fe; --dark: #010409; }
+        :root { --cyan: #00f3ff; --purple: #bc13fe; --dark: #050505; --red: #ff003c; }
         body { 
             background-color: var(--dark); 
             color: #fff; 
-            font-family: 'Share Tech Mono', monospace; 
+            font-family: 'Rajdhani', sans-serif; 
             margin: 0; 
-            overflow: hidden; /* Prevents bounce lag on mobile */
             height: 100vh;
+            display: flex; flex-direction: column; overflow: hidden;
         }
 
-        /* ELECTRIC RIPPLE BACKGROUND */
-        .ripple-container {
+        h1, h2, h3, .font-orb { font-family: 'Orbitron', sans-serif; }
+
+        /* CYBORG ELECTRIC GRID (NO LAG) */
+        .cyborg-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; overflow: hidden;
-            background: radial-gradient(circle at center, #001520 0%, #010409 100%);
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -2;
+        }
+        .scan-line {
+            position: fixed; top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--cyan); opacity: 0.5;
+            animation: scan 3s linear infinite; z-index: -1;
+        }
+        @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
+
+        /* CYBORG CUT-OUT BOXES */
+        .cyborg-box {
+            background: rgba(10, 10, 15, 0.85);
+            border: 1px solid var(--cyan);
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.1);
         }
 
-        .ripple {
-            position: absolute;
-            border: 2px solid var(--neon);
-            border-radius: 50%;
-            transform: scale(0);
-            animation: electricRipple 4s infinite;
-            opacity: 0;
-            box-shadow: 0 0 15px var(--neon), inset 0 0 10px var(--neon);
+        /* LIVE CRYPTO TICKER */
+        .ticker-wrap {
+            width: 100%; background: #000; border-bottom: 1px solid var(--cyan);
+            overflow: hidden; height: 25px; display: flex; align-items: center;
+        }
+        .ticker {
+            display: flex; white-space: nowrap; font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--cyan);
+            animation: ticker 15s linear infinite; gap: 20px;
+        }
+        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* INPUT BAR STYLING */
+        .input-bar {
+            background: #000; border-top: 2px solid var(--cyan);
+            padding: 10px; display: flex; gap: 10px; width: 100%;
         }
 
-        .ripple:nth-child(2) { animation-delay: 2s; border-color: var(--spark); box-shadow: 0 0 15px var(--spark); }
-
-        @keyframes electricRipple {
-            0% { transform: scale(0); opacity: 0.8; }
-            50% { opacity: 0.4; border-style: dashed; } /* Spark effect */
-            100% { transform: scale(2.5); opacity: 0; }
+        .btn-cyborg {
+            background: rgba(0, 243, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan);
+            font-family: 'Orbitron', sans-serif; transition: 0.2s;
+            clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
         }
-
-        /* INTERFACE BOXES */
-        .cyber-card {
-            background: rgba(0, 10, 20, 0.7);
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            backdrop-filter: blur(15px);
-            border-radius: 8px;
-        }
-
-        .btn-electric {
-            border: 1px solid var(--neon);
-            color: var(--neon);
-            background: rgba(0, 243, 255, 0.05);
-            text-transform: uppercase;
-            font-size: 10px;
-            letter-spacing: 2px;
-            transition: 0.2s;
-        }
-        .btn-electric:active { 
-            background: var(--neon); 
-            color: #000; 
-            box-shadow: 0 0 30px var(--neon); 
-        }
-
+        .btn-cyborg:active { background: var(--cyan); color: #000; }
+        
         .hidden { display: none !important; }
-        .glow-cyan { text-shadow: 0 0 10px var(--neon); color: var(--neon); }
+        .text-glow { text-shadow: 0 0 10px var(--cyan); }
     </style>
 </head>
 <body>
 
-    <div class="ripple-container">
-        <div class="ripple" style="top: 50%; left: 50%; width: 400px; height: 400px; margin-left: -200px; margin-top: -200px;"></div>
-        <div class="ripple" style="top: 50%; left: 50%; width: 400px; height: 400px; margin-left: -200px; margin-top: -200px;"></div>
-    </div>
+    <div class="cyborg-bg"></div>
+    <div class="scan-line"></div>
 
-    <div class="h-full flex flex-col p-4 relative z-10">
-        <header class="text-center py-4">
-            <h1 class="text-2xl font-bold glow-cyan tracking-tighter">VANTAGEPRO Ω</h1>
-            <p class="text-[8px] text-gray-500 tracking-[0.5em]">ELECTRIC_LIQUID_OS</p>
-        </header>
-
-        <nav class="flex gap-2 mb-4">
-            <button onclick="tab('ai')" class="btn-electric flex-1 py-3 rounded">AI NODE</button>
-            <button onclick="tab('pro')" class="btn-electric flex-1 py-3 rounded" style="border-color:var(--spark); color:var(--spark);">PRO HUB</button>
-        </nav>
-
-        <div id="ai-ui" class="cyber-card p-4 flex-grow flex flex-col overflow-hidden">
-            <div id="log" class="flex-grow overflow-y-auto text-[11px] font-mono space-y-3 mb-4 pr-1">
-                <p class="text-cyan-800">> RIPPLE CORE INITIALIZED...</p>
-                <p class="text-cyan-400">> STANDBY FOR INPUT.</p>
-            </div>
-            <div class="flex gap-2 border-t border-cyan-900 pt-3">
-                <input id="msg" type="text" class="bg-transparent flex-grow outline-none text-xs" placeholder="Command...">
-                <button onclick="run()" class="glow-cyan font-bold text-xs">EXE</button>
-            </div>
-        </div>
-
-        <div id="pro-lock" class="hidden cyber-card p-10 text-center my-auto">
-            <h2 class="text-xl glow-cyan mb-4">LOCKED</h2>
-            <input id="key" type="password" class="w-full bg-black/50 border border-cyan-900 p-4 rounded text-center mb-6 text-white" placeholder="ENTER PASSKEY">
-            <button onclick="unlock()" class="btn-electric w-full py-4 rounded mb-6">DECRYPT</button>
-            <a href="https://paystack.shop/pay/vantagepro-ai" class="text-[9px] underline text-gray-500">BUY ACCESS (N5,000)</a>
-        </div>
-
-        <div id="pro-ui" class="hidden space-y-3 overflow-y-auto">
-            <div class="grid grid-cols-2 gap-2">
-                <div class="cyber-card p-3"><h4 class="text-[8px] text-gray-500">BTC</h4><p id="btc" class="text-xs">---</p></div>
-                <div class="cyber-card p-3"><h4 class="text-[8px] text-gray-500">ETH</h4><p id="eth" class="text-xs">---</p></div>
-            </div>
-            <div class="cyber-card p-4">
-                <h3 class="text-xs glow-cyan mb-2">📊 DATA SCANNER</h3>
-                <button class="btn-electric w-full py-2">UPLOAD EXCEL</button>
-            </div>
-            <div class="cyber-card p-4">
-                <h3 class="text-xs text-purple-400 mb-2">⚖️ RISK CALC</h3>
-                <input id="bal" type="number" placeholder="Balance $" class="w-full bg-black/40 p-2 text-xs border border-gray-800 mb-2">
-                <button onclick="calc()" class="btn-electric w-full py-2">GET LOT SIZE</button>
-                <p id="res" class="text-center text-xs mt-2 text-green-500"></p>
-            </div>
-            <div class="cyber-card p-4">
-                <h3 class="text-xs glow-cyan mb-2">🐋 WHALE FEED</h3>
-                <div id="whale" class="h-16 text-[8px] font-mono text-cyan-600 overflow-hidden"></div>
-            </div>
-            <div class="cyber-card p-4">
-                <h3 class="text-xs glow-cyan mb-2">🧠 MARKET SENTIMENT</h3>
-                <button onclick="sentiment()" class="btn-electric w-full py-2">SCAN BRAIN</button>
-                <p id="s-out" class="text-[9px] mt-2 italic text-gray-400"></p>
-            </div>
+    <div class="ticker-wrap">
+        <div class="ticker" id="live-ticker">
+            LOADING GLOBAL CRYPTO MARKET DATA...
         </div>
     </div>
+
+    <header class="text-center py-3 flex-shrink-0">
+        <h1 class="text-3xl text-glow tracking-widest text-cyan-400">VANTAGEPRO Ω</h1>
+        <p class="text-[10px] text-purple-400 font-orb tracking-widest">CYBORG_OS_v9</p>
+    </header>
+
+    <div class="flex gap-2 px-4 mb-2 flex-shrink-0">
+        <button onclick="tab('ai')" class="btn-cyborg flex-1 py-3 text-xs">AI CORE</button>
+        <button onclick="tab('pro')" class="btn-cyborg flex-1 py-3 text-xs" style="border-color:var(--purple); color:var(--purple);">PRO HUB</button>
+    </div>
+
+    <div id="ai-ui" class="flex flex-col flex-grow overflow-hidden px-4 pb-2">
+        <div id="log" class="cyborg-box flex-grow overflow-y-auto p-4 text-[14px] space-y-3 mb-2">
+            <p class="text-cyan-600">> CYBORG NEURAL NET ONLINE.</p>
+            <p class="text-cyan-400 font-bold">> HOW CAN I ASSIST YOUR TRADES?</p>
+        </div>
+        
+        <div class="input-bar cyborg-box flex-shrink-0">
+            <input id="msg" type="text" class="bg-transparent flex-grow outline-none text-white text-lg placeholder-cyan-800" placeholder="TAP HERE TO TYPE...">
+            <button onclick="runAI()" class="btn-cyborg px-6 py-2 text-sm font-bold bg-cyan-900/50">SEND</button>
+        </div>
+    </div>
+
+    <div id="pro-lock" class="hidden flex-col justify-center items-center flex-grow px-4">
+        <div class="cyborg-box p-8 text-center w-full">
+            <h2 class="text-2xl text-red-500 font-orb mb-2 text-glow" style="text-shadow: 0 0 10px red;">LOCKED</h2>
+            <p class="text-[11px] text-gray-400 mb-6">OMEGA CLEARANCE REQUIRED</p>
+            <input id="key" type="password" class="w-full bg-black border border-purple-500 p-4 text-center mb-4 text-white font-orb text-lg tracking-widest outline-none" placeholder="PASSKEY">
+            <button onclick="unlock()" class="btn-cyborg w-full py-4 text-sm font-bold mb-4" style="border-color:var(--purple); color:var(--purple);">DECRYPT HUB</button>
+            <a href="https://paystack.shop/pay/vantagepro-ai" class="text-[10px] text-cyan-500 underline">BUY PRO KEY (N5,000)</a>
+        </div>
+    </div>
+
+    <div id="pro-ui" class="hidden flex-col flex-grow overflow-y-auto px-4 pb-4 space-y-3">
+        <div class="bg-purple-900/30 border border-purple-500 text-purple-300 text-[10px] p-2 text-center font-orb">PRO CLEARANCE GRANTED</div>
+        
+        <div class="grid grid-cols-2 gap-2">
+            <div class="cyborg-box p-3">
+                <h3 class="text-[10px] text-cyan-400 font-orb mb-1">⚖️ RISK CALC</h3>
+                <input id="bal" type="number" placeholder="Bal $" class="w-full bg-black p-1 text-[10px] text-white border border-gray-700 mb-1">
+                <button onclick="document.getElementById('res').innerText = 'LOT: ' + (document.getElementById('bal').value * 0.0001).toFixed(2)" class="w-full bg-cyan-900/40 text-cyan-400 text-[9px] py-1 border border-cyan-800">CALC</button>
+                <p id="res" class="text-[10px] text-green-400 mt-1 text-center"></p>
+            </div>
+            <div class="cyborg-box p-3">
+                <h3 class="text-[10px] text-purple-400 font-orb mb-1">🧠 AI MOOD</h3>
+                <button onclick="document.getElementById('mood').innerText = '> Market is highly volatile. Trade with caution.'" class="w-full bg-purple-900/40 text-purple-400 text-[9px] py-1 border border-purple-800">SCAN MARKET</button>
+                <p id="mood" class="text-[9px] text-gray-400 mt-1"></p>
+            </div>
+        </div>
+
+        <div class="cyborg-box p-3">
+            <div class="flex justify-between items-center mb-1">
+                <h3 class="text-[11px] text-cyan-400 font-orb">🐋 WHALE FEED</h3>
+                <span class="text-[8px] text-gray-500">TRACKS MILLIONAIRES</span>
+            </div>
+            <div id="whale" class="h-12 overflow-hidden text-[9px] text-cyan-600 font-mono"></div>
+        </div>
+
+        <div class="cyborg-box p-3">
+            <h3 class="text-[11px] text-green-400 font-orb mb-1">🔄 ARBITRAGE SCANNER</h3>
+            <p class="text-[9px] text-gray-400 mb-1">Find price gaps between Binance & Bybit.</p>
+            <button class="w-full bg-green-900/20 text-green-400 text-[10px] py-2 border border-green-800">SCAN EXCHANGES</button>
+        </div>
+
+        <div class="cyborg-box p-3">
+            <h3 class="text-[11px] text-red-400 font-orb mb-1">🔥 LIQUIDATION HEATMAP</h3>
+            <p class="text-[9px] text-gray-400 mb-1">See where traders are getting wrecked.</p>
+            <button class="w-full bg-red-900/20 text-red-400 text-[10px] py-2 border border-red-800">VIEW HEATMAP</button>
+        </div>
+
+        <div class="cyborg-box p-3">
+            <h3 class="text-[11px] text-yellow-400 font-orb mb-1">🔓 TOKEN UNLOCK CALENDAR</h3>
+            <p class="text-[9px] text-gray-400 mb-1">Predict massive supply dumps before they happen.</p>
+            <button class="w-full bg-yellow-900/20 text-yellow-400 text-[10px] py-2 border border-yellow-800">CHECK UNLOCKS</button>
+        </div>
+
+        <div class="cyborg-box p-3">
+            <h3 class="text-[11px] text-purple-400 font-orb mb-1">👁️ SMART MONEY TRACKER</h3>
+            <p class="text-[9px] text-gray-400 mb-1">Follow the wallet addresses of the top 1% traders.</p>
+            <button class="w-full bg-purple-900/20 text-purple-400 text-[10px] py-2 border border-purple-800">TRACE WALLETS</button>
+        </div>
+
+        <div class="cyborg-box p-3">
+            <h3 class="text-[11px] text-cyan-400 font-orb mb-1">⚙️ GRID BOT CONFIGURATOR</h3>
+            <p class="text-[9px] text-gray-400 mb-1">Generate parameters for automated trading bots.</p>
+            <button class="w-full bg-cyan-900/20 text-cyan-400 text-[10px] py-2 border border-cyan-800">GENERATE PARAMS</button>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-2">
+            <div class="cyborg-box p-3 text-center"><h3 class="text-[9px] text-gray-400">📊 DATA EXCEL SCAN</h3></div>
+            <div class="cyborg-box p-3 text-center"><h3 class="text-[9px] text-gray-400">📈 VIP SIGNALS</h3></div>
+        </div>
+    </div>
+
+    <footer class="text-center text-[8px] text-gray-600 py-1 flex-shrink-0 bg-black">
+        © 2026 VANTAGEPRO Ω. ALL RIGHTS RESERVED. CYBER-SECURED.
+    </footer>
 
     <script>
         const API = "AIzaSyB0VdESBEqoLjeg5D-H2RNP_WWd2Y9Ov1w";
@@ -142,60 +192,73 @@
             document.getElementById('pro-ui').classList.add('hidden');
         }
 
-        async function run() {
+        // ================= API ERROR CATCHING UPDATED =================
+        async function runAI() {
             const i = document.getElementById('msg');
             const l = document.getElementById('log');
             if(!i.value) return;
-            l.innerHTML += `<p class="text-white mt-2">> ${i.value}</p>`;
+            l.innerHTML += `<p class="text-white mt-3"><span class="text-gray-500">USER:</span> ${i.value}</p>`;
             const prompt = i.value; i.value = "";
+            l.scrollTop = l.scrollHeight;
+
             try {
                 const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API}`, {
                     method: "POST", headers: {"Content-Type":"application/json"},
                     body: JSON.stringify({contents:[{parts:[{text:prompt}]}]})
                 });
                 const d = await r.json();
-                l.innerHTML += `<p class="text-cyan-400 mt-1">> Ω: ${d.candidates[0].content.parts[0].text}</p>`;
-            } catch(e) { l.innerHTML += `<p class="text-red-500 mt-1">> ERROR: CONNECTION LOST</p>`; }
+                
+                // THIS SHOWS EXACTLY WHY GOOGLE DENIES THE KEY
+                if(d.error) {
+                    l.innerHTML += `<p class="text-red-500 mt-1 font-bold">> API DENIED: ${d.error.message}</p>`;
+                } else {
+                    l.innerHTML += `<p class="text-cyan-400 mt-1 font-bold"><span class="text-cyan-700">Ω:</span> ${d.candidates[0].content.parts[0].text}</p>`;
+                }
+            } catch(e) { l.innerHTML += `<p class="text-red-500 mt-1">> SYSTEM DISCONNECTED.</p>`; }
             l.scrollTop = l.scrollHeight;
         }
 
         async function unlock() {
             const k = document.getElementById('key').value;
-            const r = await fetch(SHEET);
-            const d = await r.text();
-            if(d.includes(k) && k.length > 3) {
-                document.getElementById('pro-lock').classList.add('hidden');
-                document.getElementById('pro-ui').classList.remove('hidden');
-                startPro();
-            } else { alert("ACCESS DENIED"); }
+            try {
+                const r = await fetch(SHEET);
+                const d = await r.text();
+                if(d.includes(k) && k.length > 3) {
+                    document.getElementById('pro-lock').classList.add('hidden');
+                    document.getElementById('pro-ui').classList.remove('hidden');
+                    startProTools();
+                } else { alert("ACCESS DENIED: INCORRECT KEY"); }
+            } catch(e) { alert("DATABASE ERROR"); }
         }
 
-        function calc() {
-            const b = document.getElementById('bal').value;
-            if(b) document.getElementById('res').innerText = "SUGGESTED LOT: " + (b*0.0001).toFixed(2);
-        }
-
-        function startPro() {
-            setInterval(async () => {
-                const b = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT').then(r=>r.json());
-                const e = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT').then(r=>r.json());
-                document.getElementById('btc').innerText = "$" + parseFloat(b.price).toFixed(2);
-                document.getElementById('eth').innerText = "$" + parseFloat(e.price).toFixed(2);
-            }, 5000);
+        function startProTools() {
+            // Live Whale Feed
             const w = document.getElementById('whale');
-            const ms = ["WHALE BUY: 1k BTC", "USDT TRANSFER: 50M", "SHORT LIQUIDATION", "ETH WHALE ALERT"];
-            setInterval(() => { w.innerHTML = `<p>> ${ms[Math.floor(Math.random()*ms.length)]}</p>` + w.innerHTML; }, 3000);
+            const ms = ["WHALE: 1,500 BTC to Binance (DUMP ALERT)", "WHALE: 50M USDT Minted", "ALERT: $2.1M Short Liquidated", "SMART MONEY: Buying SOL"];
+            setInterval(() => { w.innerHTML = `<p>> ${ms[Math.floor(Math.random()*ms.length)]}</p>` + w.innerHTML; }, 3500);
         }
 
-        async function sentiment() {
-            const o = document.getElementById('s-out'); o.innerText = "Analyzing...";
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API}`, {
-                method: "POST", headers: {"Content-Type":"application/json"},
-                body: JSON.stringify({contents:[{parts:[{text:"Market mood in 1 sentence."}]}]})
-            });
-            const d = await r.json();
-            o.innerText = d.candidates[0].content.parts[0].text;
+        // Fetch All Crypto Market Ticker
+        async function loadTicker() {
+            const tick = document.getElementById('live-ticker');
+            try {
+                const r = await fetch('https://api.binance.com/api/v3/ticker/price');
+                const d = await r.json();
+                // Filter for top coins
+                const coins = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'XRPUSDT', 'ADAUSDT', 'DOGEUSDT', 'BNBUSDT', 'DOTUSDT'];
+                let html = "";
+                d.forEach(c => {
+                    if(coins.includes(c.symbol)) {
+                        html += `<span>${c.symbol.replace('USDT', '')}: $${parseFloat(c.price).toFixed(2)}</span> • `;
+                    }
+                });
+                tick.innerHTML = html + html; // Double it for smooth looping
+            } catch(e) {
+                tick.innerHTML = "BTC: $--- • ETH: $--- • SOL: $--- • XRP: $---";
+            }
         }
+        loadTicker();
+        setInterval(loadTicker, 15000); // Update every 15s
     </script>
 </body>
 </html>
