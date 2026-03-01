@@ -16,45 +16,60 @@
         @keyframes flash { 0%, 100% { opacity: 0; } 10%, 12% { opacity: 0.3; } 11% { opacity: 0.8; } }
         .lightning-active { animation: flash 4s infinite; }
 
-        /* PIN SCREEN (Holographic) */
-        #pin-screen { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; transform-style: preserve-3d; transition: 0.1s; }
-        .pin-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--neon); margin: 0 10px; }
-        .pin-dot.active { background: var(--neon); box-shadow: 0 0 20px var(--neon); }
-        .key { width: 70px; height: 70px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; background: rgba(255,255,255,0.02); backdrop-filter: blur(5px); }
+        /* PRIVACY SHIELD MODAL */
+        #privacy-shield { position: fixed; inset: 0; z-index: 20000; background: #000; display: flex; align-items: center; justify-content: center; padding: 20px; text-align: center; }
         
-        /* SHATTER PARTICLES */
-        .brick { position: absolute; background: rgba(0, 243, 255, 0.2); border: 1px solid rgba(255,255,255,0.1); pointer-events: none; z-index: 11000; }
+        /* 3D PIN SCREEN */
+        #pin-screen { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; transform-style: preserve-3d; }
+        .pin-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--neon); margin: 0 10px; transition: 0.3s; }
+        .pin-dot.active { background: var(--neon); box-shadow: 0 0 20px var(--neon); }
+        .key { width: 70px; height: 70px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; background: rgba(255,255,255,0.02); backdrop-filter: blur(5px); transition: 0.2s; }
+        .key:active { background: var(--neon); color: #000; }
 
-        /* BREAKOUT LOGO & CRACKS */
+        /* SHATTER PARTICLES */
+        .brick { position: absolute; background: rgba(0, 243, 255, 0.4); border: 1px solid rgba(255,255,255,0.2); pointer-events: none; z-index: 11000; }
+
+        /* LOGO SLAM & CRACKS */
         #breakout-stage { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 9000; background: #000; }
-        #cracks { position: absolute; inset: 0; opacity: 0; z-index: 9001; }
-        .omega-logo { font-size: 180px; font-family: 'Orbitron'; color: var(--neon); opacity: 0; transform: translateZ(-1000px); text-shadow: 0 0 50px var(--neon); z-index: 9100; }
-        .v-name { font-size: 28px; font-family: 'Orbitron'; letter-spacing: 1.2em; opacity: 0; transform: translateY(50px); margin-top: 30px; text-transform: uppercase; }
+        #cracks { position: absolute; inset: 0; opacity: 0; z-index: 9001; pointer-events: none; }
+        .omega-logo { font-size: 180px; font-family: 'Orbitron'; color: var(--neon); opacity: 0; transform: translateZ(-1000px); text-shadow: 0 0 50px var(--neon); }
 
         /* SIRI LOADING */
         #siri-container { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 8000; background: #000; }
         .siri-orb { width: 220px; height: 4px; border-radius: 100px; background: linear-gradient(90deg, var(--siri-1), var(--siri-2), var(--siri-1)); background-size: 200% 100%; box-shadow: 0 0 40px var(--siri-1); }
 
-        /* MAIN HUBS */
-        #pro-hub, #ai-mode { display: none; height: 100vh; flex-direction: column; background: #020205; overflow-y: auto; opacity: 0; position: fixed; inset: 0; z-index: 7000; }
-        #ai-mode { background: radial-gradient(circle at center, #1a0b2e 0%, #020205 100%); }
+        /* DASHBOARDS */
+        #pro-hub, #ai-free-hub { display: none; height: 100vh; flex-direction: column; background: #020205; overflow-y: auto; opacity: 0; position: fixed; inset: 0; z-index: 7000; }
+        #ai-free-hub { background: radial-gradient(circle at center, #0b0b2e 0%, #000 100%); }
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; }
-        .tool-card { padding: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.03); }
         
-        .mode-toggle { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 12000; display: none; }
-        .hidden { display: none !important; }
+        /* TOOL GRID */
+        .tool-card { padding: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.03); transition: 0.3s; }
+        .tool-card:active { transform: scale(0.95); background: rgba(0, 243, 255, 0.05); }
+
+        .mode-toggle { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 15000; display: none; }
+        .premium-lock { position: relative; overflow: hidden; }
+        .premium-lock::after { content: "PRO"; position: absolute; top: 5px; right: 5px; font-size: 6px; background: var(--neon); color: #000; padding: 2px 4px; border-radius: 4px; font-weight: 900; }
     </style>
 </head>
 <body onmousemove="handleTilt(event)">
 
     <div id="lightning-bg" class="lightning-active"></div>
 
+    <div id="privacy-shield">
+        <div class="max-w-xs glass p-8 border-cyan-500/30">
+            <h2 class="text-cyan-400 font-black tracking-widest uppercase mb-4 text-sm" style="font-family: 'Orbitron';">Sovereign Protocol</h2>
+            <p class="text-[10px] text-gray-400 leading-relaxed mb-8">This terminal is an institutional-grade interface. Unauthorized access is monitored. By entering, you agree to the 2% protocol fee and neural data processing.</p>
+            <button onclick="acceptPrivacy()" class="w-full py-4 bg-cyan-600 rounded-xl text-[9px] font-black uppercase tracking-[0.3em] shadow-[0_0_30px_rgba(8,145,178,0.4)]">I have read it</button>
+        </div>
+    </div>
+
     <div id="pin-screen">
-        <h2 class="text-[9px] tracking-[1em] uppercase text-cyan-400 mb-12 font-black">Neural Entry Portal</h2>
-        <div class="flex mb-10" id="dots">
+        <h2 class="text-[9px] tracking-[1em] uppercase text-cyan-400/50 mb-12 font-black">Input Access Passkey</h2>
+        <div class="flex mb-12" id="dots">
             <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
         </div>
-        <div class="grid grid-cols-3 gap-6" id="keypad-grid">
+        <div class="grid grid-cols-3 gap-6">
             <div class="key" onclick="press(1)">1</div><div class="key" onclick="press(2)">2</div><div class="key" onclick="press(3)">3</div>
             <div class="key" onclick="press(4)">4</div><div class="key" onclick="press(5)">5</div><div class="key" onclick="press(6)">6</div>
             <div class="key" onclick="press(7)">7</div><div class="key" onclick="press(8)">8</div><div class="key" onclick="press(9)">9</div>
@@ -64,59 +79,96 @@
 
     <div id="breakout-stage">
         <svg id="cracks" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path d="M50 50 L20 10 M50 50 L80 20 M50 50 L10 90 M50 50 L90 70 M50 50 L50 0 M50 50 L100 50" stroke="rgba(255,255,255,0.4)" stroke-width="0.3" fill="none" />
+            <path d="M50 50 L20 10 M50 50 L80 20 M50 50 L10 90 M50 50 L90 70 M50 50 L50 0 M50 50 L100 50" stroke="white" stroke-width="0.3" fill="none" />
         </svg>
         <div class="omega-logo" id="main-logo">Ω</div>
-        <div class="v-name" id="main-name">Vantage Ω</div>
+        <div class="v-name mt-8 text-white tracking-[1.5em] font-black uppercase text-xl opacity-0" id="main-name">Vantage Ω</div>
     </div>
 
     <div id="siri-container">
         <div class="siri-orb" id="siri-bar"></div>
-        <p class="mt-8 text-[8px] tracking-[0.8em] text-gray-400 uppercase font-black">Decrypting Secure Node</p>
+        <p class="mt-8 text-[8px] tracking-[0.8em] text-cyan-400 uppercase font-black animate-pulse">Syncing Neural Link</p>
     </div>
 
     <div id="pro-hub" class="p-6">
         <header class="flex justify-between items-center mb-10">
-            <h1 class="text-xl font-black italic text-cyan-400 tracking-tighter uppercase" style="font-family: 'Orbitron';">Vantage Ω</h1>
-            <button onclick="logout()" class="text-[8px] text-gray-600 border border-gray-800 px-3 py-1 rounded">Logout</button>
-        </header>
-        <div class="grid grid-cols-2 gap-4 pb-32">
-            <div class="glass tool-card"><span>🎯</span><p class="text-[8px] font-black uppercase mt-2 text-purple-400">Whale Sniper</p></div>
-            <div class="glass tool-card"><span>🕵️</span><p class="text-[8px] font-black uppercase mt-2 text-cyan-400">Insider Spy</p></div>
-            <div class="glass tool-card"><span>🛡️</span><p class="text-[8px] font-black uppercase mt-2 text-emerald-400">Risk Engine</p></div>
-            <div class="glass tool-card"><span>⚖️</span><p class="text-[8px] font-black uppercase mt-2 text-yellow-400">Tax Harvest</p></div>
+            <div>
+                <h1 class="text-xl font-black italic text-cyan-400 tracking-tighter uppercase" style="font-family: 'Orbitron';">Vantage Ω</h1>
+                <p class="text-[7px] text-gray-500 font-bold uppercase tracking-widest">Sovereign Pro Hub</p>
             </div>
+            <div class="text-[8px] px-3 py-1 glass border-cyan-500/50 text-cyan-400 font-black">PRO ACTIVE</div>
+        </header>
+
+        <div class="grid grid-cols-2 gap-3 pb-32">
+            <div onclick="bot('Sniper')" class="glass tool-card premium-lock"><span>🎯</span><p class="text-[8px] font-black uppercase mt-2">Whale Sniper</p></div>
+            <div onclick="bot('Insider')" class="glass tool-card premium-lock"><span>🕵️</span><p class="text-[8px] font-black uppercase mt-2">Insider Spy</p></div>
+            <div onclick="bot('Risk')" class="glass tool-card premium-lock"><span>🛡️</span><p class="text-[8px] font-black uppercase mt-2">Risk Engine</p></div>
+            <div onclick="bot('Arbitrage')" class="glass tool-card premium-lock"><span>🔄</span><p class="text-[8px] font-black uppercase mt-2">Arb Scanner</p></div>
+            <div onclick="bot('DarkPool')" class="glass tool-card premium-lock"><span>🌑</span><p class="text-[8px] font-black uppercase mt-2">Dark Pool</p></div>
+            <div onclick="bot('MEV')" class="glass tool-card premium-lock"><span>⛓️</span><p class="text-[8px] font-black uppercase mt-2">MEV Shield</p></div>
+            <div onclick="bot('Liquidity')" class="glass tool-card premium-lock"><span>🔥</span><p class="text-[8px] font-black uppercase mt-2">Liq. Heatmap</p></div>
+            <div onclick="bot('Tax')" class="glass tool-card premium-lock"><span>⚖️</span><p class="text-[8px] font-black uppercase mt-2">Tax Harvest</p></div>
+            <div onclick="bot('Gas')" class="glass tool-card premium-lock"><span>⛽</span><p class="text-[8px] font-black uppercase mt-2">Gas Optimizer</p></div>
+            <div onclick="bot('Node')" class="glass tool-card premium-lock"><span>📶</span><p class="text-[8px] font-black uppercase mt-2">RPC Latency</p></div>
+            <div onclick="bot('Whale')" class="glass tool-card premium-lock"><span>🐋</span><p class="text-[8px] font-black uppercase mt-2">Whale Tracker</p></div>
+            <div onclick="bot('NFT')" class="glass tool-card premium-lock"><span>🖼️</span><p class="text-[8px] font-black uppercase mt-2">NFT Sniper</p></div>
+            <div onclick="bot('Sentiment')" class="glass tool-card premium-lock"><span>🧠</span><p class="text-[8px] font-black uppercase mt-2">Social Pulse</p></div>
+            <div onclick="bot('DeepSweep')" class="glass tool-card premium-lock"><span>🧹</span><p class="text-[8px] font-black uppercase mt-2">Deep Sweep</p></div>
+            <div onclick="bot('Flash')" class="glass tool-card premium-lock"><span>⚡</span><p class="text-[8px] font-black uppercase mt-2">Flash Swap</p></div>
+            <div onclick="bot('Hedge')" class="glass tool-card premium-lock"><span>📉</span><p class="text-[8px] font-black uppercase mt-2">Auto-Hedge</p></div>
+            <div onclick="bot('Bridge')" class="glass tool-card premium-lock"><span>🌉</span><p class="text-[8px] font-black uppercase mt-2">Cross-Bridge</p></div>
+            <div onclick="bot('Audit')" class="glass tool-card premium-lock"><span>🔍</span><p class="text-[8px] font-black uppercase mt-2">Contract Audit</p></div>
+            <div onclick="bot('Wash')" class="glass tool-card premium-lock"><span>🧼</span><p class="text-[8px] font-black uppercase mt-2">Clean Bot</p></div>
+            <div onclick="location.reload()" class="glass tool-card border-red-500/30"><span>☣️</span><p class="text-[8px] font-black uppercase mt-2 text-red-500">Exit Session</p></div>
+        </div>
     </div>
 
-    <div id="ai-mode" class="p-6">
-        <h1 class="text-xl font-black italic text-purple-500 tracking-tighter uppercase mb-10" style="font-family: 'Orbitron';">NEURAL Ω</h1>
-        <div class="glass p-10 text-center border-purple-500/30">
-            <p class="text-[10px] text-purple-300 font-mono italic">"AI Sentinel active. Searching for liquidity clusters..."</p>
+    <div id="ai-free-hub" class="p-6">
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h1 class="text-xl font-black italic text-purple-500 tracking-tighter uppercase" style="font-family: 'Orbitron';">NEURAL Ω</h1>
+                <p class="text-[7px] text-gray-500 font-bold uppercase tracking-widest">AI Sentinel (Free)</p>
+            </div>
+        </header>
+        <div class="glass p-10 text-center border-purple-500/20 mb-6">
+            <p class="text-[10px] text-purple-300 font-mono italic">"Analyzing public chain data... Enter Pro mode for deep liquidity sniping."</p>
+        </div>
+        <div class="grid grid-cols-1 gap-4">
+            <div class="glass p-6 text-center border-purple-500/10"><span>🧠</span><p class="text-[8px] font-black uppercase mt-2 text-purple-400">Basic Market Sentiment</p></div>
+            <div class="glass p-6 text-center border-purple-500/10"><span>📡</span><p class="text-[8px] font-black uppercase mt-2 text-purple-400">Public Whale Alerts</p></div>
         </div>
     </div>
 
     <div id="toggle-container" class="mode-toggle">
-        <button onclick="switchMode()" id="mode-btn" class="px-8 py-3 glass rounded-full text-[9px] font-black tracking-widest uppercase text-cyan-400 border-cyan-500/20">Switch to AI Mode</button>
+        <button onclick="switchMode()" id="mode-btn" class="px-8 py-3 glass rounded-full text-[9px] font-black tracking-widest uppercase text-cyan-400 border-cyan-500/20 shadow-[0_0_20px_rgba(0,243,255,0.1)]">Switch to AI (Free)</button>
     </div>
 
     <script>
         let pin = "";
         let master = "8888";
-        let isAI = false;
+        let isFree = false;
 
-        // SESSION CHECK (Auto-login)
+        // Auto-login Check
         window.onload = () => {
-            const expiry = localStorage.getItem('vantage_session');
-            if (expiry && Date.now() < expiry) {
-                directAccess();
+            if (localStorage.getItem('v_session') > Date.now()) {
+                document.getElementById('privacy-shield').style.display = 'none';
+                showHub();
             }
         };
 
         function handleTilt(e) {
-            if (document.getElementById('pin-screen').style.display === 'none') return;
-            const x = (window.innerWidth / 2 - e.pageX) / 45;
-            const y = (window.innerHeight / 2 - e.pageY) / 45;
-            gsap.to("#pin-screen", { rotateY: x, rotateX: -y, duration: 0.5 });
+            if (document.getElementById('pin-screen').style.display === 'flex') {
+                const x = (window.innerWidth / 2 - e.pageX) / 40;
+                const y = (window.innerHeight / 2 - e.pageY) / 40;
+                gsap.to("#pin-screen", { rotateY: x, rotateX: -y, duration: 0.5 });
+            }
+        }
+
+        function acceptPrivacy() {
+            gsap.to("#privacy-shield", { opacity: 0, duration: 0.5, onComplete: () => {
+                document.getElementById('privacy-shield').style.display = 'none';
+                document.getElementById('pin-screen').style.display = 'flex';
+            }});
         }
 
         function press(n) {
@@ -125,56 +177,50 @@
                 const dots = document.querySelectorAll('.pin-dot');
                 dots[pin.length - 1].classList.add('active');
                 if (pin.length === 4) {
-                    if (pin === master) shatterAndBreak();
+                    if (pin === master) shatterPhysics();
                     else setTimeout(() => { pin = ""; dots.forEach(d => d.classList.remove('active')); }, 300);
                 }
             }
         }
 
-        // 🧱 THE BRICK SHATTER EFFECT
-        function shatterAndBreak() {
-            // Store session for 1 hour
-            localStorage.setItem('vantage_session', Date.now() + 3600000);
-            
+        // 🧱 BRICK SHATTER PHYSICS
+        function shatterPhysics() {
+            localStorage.setItem('v_session', Date.now() + 3600000); // 1 Hour session
             const screen = document.getElementById('pin-screen');
-            const rect = screen.getBoundingClientRect();
             
-            // Create 60 "bricks"
-            for(let i=0; i<60; i++) {
+            for(let i=0; i<50; i++) {
                 let brick = document.createElement('div');
                 brick.className = 'brick';
-                let size = Math.random() * 40 + 20;
+                let size = Math.random() * 30 + 10;
                 brick.style.width = size + 'px';
                 brick.style.height = size + 'px';
-                brick.style.left = Math.random() * window.innerWidth + 'px';
-                brick.style.top = Math.random() * window.innerHeight + 'px';
+                brick.style.left = (Math.random() * 100) + 'vw';
+                brick.style.top = (Math.random() * 100) + 'vh';
                 document.body.appendChild(brick);
 
                 gsap.to(brick, {
-                    x: (Math.random() - 0.5) * 1500,
-                    y: (Math.random() - 0.5) * 1500,
-                    rotation: Math.random() * 720,
+                    x: (Math.random() - 0.5) * 1000,
+                    y: (Math.random() - 0.5) * 1000,
+                    rotation: Math.random() * 360,
                     opacity: 0,
-                    duration: 1.5,
-                    ease: "power4.out",
+                    duration: 1,
                     onComplete: () => brick.remove()
                 });
             }
-
-            gsap.to("#pin-screen", { scale: 0.5, opacity: 0, duration: 0.5, ease: "power4.in", onComplete: triggerLogoSlam });
+            gsap.to(screen, { scale: 1.5, opacity: 0, duration: 0.6, onComplete: triggerLogoSlam });
         }
 
         function triggerLogoSlam() {
             document.getElementById('pin-screen').style.display = 'none';
-            document.getElementById('lightning-bg').classList.remove('lightning-active'); // Pause bg flash for slam
+            document.getElementById('lightning-bg').classList.remove('lightning-active');
             const stage = document.getElementById('breakout-stage');
             stage.style.display = 'flex';
 
             const tl = gsap.timeline();
-            tl.to("#main-logo", { opacity: 1, z: 0, scale: 1.5, duration: 0.5, ease: "back.out(3)" })
-              .to("#lightning-bg", { opacity: 1, duration: 0.05, repeat: 3, yoyo: true }) // Slam lightning
-              .to("#cracks", { opacity: 1, scale: 1.1, duration: 0.1 }, "-=0.5")
-              .to("#main-name", { opacity: 1, y: 0, duration: 1 }, "-=0.1")
+            tl.to("#main-logo", { opacity: 1, z: 0, scale: 1.3, duration: 0.5, ease: "back.out(2)" })
+              .to("#lightning-bg", { opacity: 1, duration: 0.05, repeat: 4, yoyo: true }) // Slam Flash
+              .to("#cracks", { opacity: 1, duration: 0.1 })
+              .to("#main-name", { opacity: 1, y: 0, duration: 0.8 }, "-=0.2")
               .to(stage, { opacity: 0, duration: 0.8, delay: 2, onComplete: showSiri });
         }
 
@@ -182,19 +228,16 @@
             document.getElementById('breakout-stage').style.display = 'none';
             const siri = document.getElementById('siri-container');
             siri.style.display = 'flex';
-            gsap.to("#siri-bar", { scaleX: 1.3, repeat: -1, yoyo: true, duration: 0.6 });
+            gsap.to("#siri-bar", { scaleX: 1.4, repeat: -1, yoyo: true, duration: 0.6 });
 
             setTimeout(() => {
-                gsap.to(siri, { opacity: 0, duration: 0.5, onComplete: () => {
-                    siri.style.display = 'none';
-                    directAccess();
-                }});
+                gsap.to(siri, { opacity: 0, duration: 0.5, onComplete: showHub });
             }, 2500);
         }
 
-        function directAccess() {
+        function showHub() {
+            document.getElementById('siri-container').style.display = 'none';
             document.getElementById('pin-screen').style.display = 'none';
-            document.getElementById('lightning-bg').style.display = 'none';
             const hub = document.getElementById('pro-hub');
             hub.style.display = 'flex';
             document.getElementById('toggle-container').style.display = 'block';
@@ -202,33 +245,33 @@
         }
 
         function switchMode() {
-            isAI = !isAI;
-            const hub = document.getElementById('pro-hub');
-            const ai = document.getElementById('ai-mode');
+            isFree = !isFree;
+            const pro = document.getElementById('pro-hub');
+            const free = document.getElementById('ai-free-hub');
             const btn = document.getElementById('mode-btn');
 
-            if(isAI) {
-                gsap.to(hub, { opacity: 0, duration: 0.4, onComplete: () => {
-                    hub.style.display = 'none';
-                    ai.style.display = 'flex';
-                    gsap.to(ai, { opacity: 1, duration: 0.4 });
+            if(isFree) {
+                gsap.to(pro, { opacity: 0, duration: 0.3, onComplete: () => {
+                    pro.style.display = 'none';
+                    free.style.display = 'flex';
+                    gsap.to(free, { opacity: 1, duration: 0.3 });
                     btn.innerText = "Switch to Pro Hub";
-                    btn.style.color = "#8b5cf6";
+                    btn.classList.replace('text-cyan-400', 'text-purple-400');
                 }});
             } else {
-                gsap.to(ai, { opacity: 0, duration: 0.4, onComplete: () => {
-                    ai.style.display = 'none';
-                    hub.style.display = 'flex';
-                    gsap.to(hub, { opacity: 1, duration: 0.4 });
-                    btn.innerText = "Switch to AI Mode";
-                    btn.style.color = "#00f3ff";
+                gsap.to(free, { opacity: 0, duration: 0.3, onComplete: () => {
+                    free.style.display = 'none';
+                    pro.style.display = 'flex';
+                    gsap.to(pro, { opacity: 1, duration: 0.3 });
+                    btn.innerText = "Switch to AI (Free)";
+                    btn.classList.replace('text-purple-400', 'text-cyan-400');
                 }});
             }
         }
 
-        function logout() {
-            localStorage.removeItem('vantage_session');
-            location.reload();
+        function bot(action) {
+            // Integration Point for your Telegram/Backend Bot
+            alert(action + " Protocol Engaged. Connecting to 2026 Neural Bridge...");
         }
     </script>
 </body>
