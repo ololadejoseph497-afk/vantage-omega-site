@@ -3,278 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VANTAGEPRO Ω | HOLOGRAPHIC</title>
+    <title>VANTAGEPRO Ω | ELECTRIC RIPPLE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { --cyan: #00f3ff; --purple: #bc13fe; --dark: #050a14; }
+        :root { --neon: #00f3ff; --spark: #bc13fe; --dark: #010409; }
         body { 
             background-color: var(--dark); 
             color: #fff; 
             font-family: 'Share Tech Mono', monospace; 
             margin: 0; 
-            overflow-x: hidden; 
+            overflow: hidden; /* Prevents bounce lag on mobile */
+            height: 100vh;
         }
 
-        /* LAG-FREE HOLOGRAPHIC BACKGROUND */
-        .holo-bg {
+        /* ELECTRIC RIPPLE BACKGROUND */
+        .ripple-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(circle at 15% 50%, rgba(0, 243, 255, 0.08), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(188, 19, 254, 0.08), transparent 25%);
-            z-index: -2;
-        }
-        
-        .grid-lines {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
-            background-size: 20px 20px;
-            z-index: -1;
+            z-index: -1; overflow: hidden;
+            background: radial-gradient(circle at center, #001520 0%, #010409 100%);
         }
 
-        /* SCI-FI SCANNING LINE */
-        .scanner {
-            width: 100%; height: 2px;
-            background: var(--cyan);
-            box-shadow: 0 0 15px var(--cyan);
-            position: fixed; top: 0; left: 0;
-            animation: scan 4s linear infinite;
-            z-index: 50; opacity: 0.5; pointer-events: none;
+        .ripple {
+            position: absolute;
+            border: 2px solid var(--neon);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: electricRipple 4s infinite;
+            opacity: 0;
+            box-shadow: 0 0 15px var(--neon), inset 0 0 10px var(--neon);
         }
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
-        /* NEON GLASS PANELS */
-        .cyber-panel {
-            background: rgba(5, 10, 20, 0.6);
+        .ripple:nth-child(2) { animation-delay: 2s; border-color: var(--spark); box-shadow: 0 0 15px var(--spark); }
+
+        @keyframes electricRipple {
+            0% { transform: scale(0); opacity: 0.8; }
+            50% { opacity: 0.4; border-style: dashed; } /* Spark effect */
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        /* INTERFACE BOXES */
+        .cyber-card {
+            background: rgba(0, 10, 20, 0.7);
             border: 1px solid rgba(0, 243, 255, 0.2);
-            border-left: 3px solid var(--cyan);
-            backdrop-filter: blur(5px);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            border-radius: 8px;
         }
 
-        .cyber-btn {
-            background: transparent;
-            border: 1px solid var(--cyan);
-            color: var(--cyan);
+        .btn-electric {
+            border: 1px solid var(--neon);
+            color: var(--neon);
+            background: rgba(0, 243, 255, 0.05);
             text-transform: uppercase;
-            transition: 0.3s;
+            font-size: 10px;
+            letter-spacing: 2px;
+            transition: 0.2s;
         }
-        .cyber-btn:active { background: var(--cyan); color: #000; box-shadow: 0 0 15px var(--cyan); }
-        .cyber-btn-purple { border-color: var(--purple); color: var(--purple); }
-        .cyber-btn-purple:active { background: var(--purple); color: #fff; box-shadow: 0 0 15px var(--purple); }
+        .btn-electric:active { 
+            background: var(--neon); 
+            color: #000; 
+            box-shadow: 0 0 30px var(--neon); 
+        }
 
-        .glow-text { text-shadow: 0 0 8px var(--cyan); }
         .hidden { display: none !important; }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--cyan); }
+        .glow-cyan { text-shadow: 0 0 10px var(--neon); color: var(--neon); }
     </style>
 </head>
 <body>
 
-    <div class="holo-bg"></div>
-    <div class="grid-lines"></div>
-    <div class="scanner"></div>
+    <div class="ripple-container">
+        <div class="ripple" style="top: 50%; left: 50%; width: 400px; height: 400px; margin-left: -200px; margin-top: -200px;"></div>
+        <div class="ripple" style="top: 50%; left: 50%; width: 400px; height: 400px; margin-left: -200px; margin-top: -200px;"></div>
+    </div>
 
-    <div class="min-h-screen p-4 flex flex-col">
-        <header class="text-center py-4 mb-4 border-b border-cyan-500/30 relative">
-            <h1 class="text-3xl font-bold glow-text">VANTAGEPRO<span class="text-[#bc13fe]">_Ω</span></h1>
-            <p class="text-[10px] text-cyan-400 mt-1 tracking-widest">v4.0 // SECURE CONNECTION</p>
+    <div class="h-full flex flex-col p-4 relative z-10">
+        <header class="text-center py-4">
+            <h1 class="text-2xl font-bold glow-cyan tracking-tighter">VANTAGEPRO Ω</h1>
+            <p class="text-[8px] text-gray-500 tracking-[0.5em]">ELECTRIC_LIQUID_OS</p>
         </header>
 
-        <div class="flex gap-3 mb-6">
-            <button onclick="switchView('free')" class="cyber-btn flex-1 py-3 text-xs font-bold rounded">AI TERMINAL</button>
-            <button onclick="switchView('pro')" class="cyber-btn cyber-btn-purple flex-1 py-3 text-xs font-bold rounded">PRO HUB</button>
+        <nav class="flex gap-2 mb-4">
+            <button onclick="tab('ai')" class="btn-electric flex-1 py-3 rounded">AI NODE</button>
+            <button onclick="tab('pro')" class="btn-electric flex-1 py-3 rounded" style="border-color:var(--spark); color:var(--spark);">PRO HUB</button>
+        </nav>
+
+        <div id="ai-ui" class="cyber-card p-4 flex-grow flex flex-col overflow-hidden">
+            <div id="log" class="flex-grow overflow-y-auto text-[11px] font-mono space-y-3 mb-4 pr-1">
+                <p class="text-cyan-800">> RIPPLE CORE INITIALIZED...</p>
+                <p class="text-cyan-400">> STANDBY FOR INPUT.</p>
+            </div>
+            <div class="flex gap-2 border-t border-cyan-900 pt-3">
+                <input id="msg" type="text" class="bg-transparent flex-grow outline-none text-xs" placeholder="Command...">
+                <button onclick="run()" class="glow-cyan font-bold text-xs">EXE</button>
+            </div>
         </div>
 
-        <main id="free-view" class="cyber-panel p-4 rounded-lg flex-grow flex flex-col">
-            <div class="text-[10px] text-cyan-500/50 mb-2 border-b border-cyan-500/20 pb-2">STATUS: NODE ACTIVE</div>
-            <div id="ai-chat" class="flex-grow overflow-y-auto text-[12px] space-y-4 mb-4 h-64">
-                <p class="text-cyan-400">> Hello. I am Omega. How can I assist your trades today?</p>
-            </div>
-            <div class="flex gap-2">
-                <input id="ai-input" type="text" class="bg-black/50 border border-cyan-500/50 flex-grow p-3 text-xs text-white focus:outline-none focus:border-cyan-400" placeholder="Ask AI something...">
-                <button onclick="sendAI()" class="cyber-btn px-4 font-bold text-xs">SEND</button>
-            </div>
-        </main>
+        <div id="pro-lock" class="hidden cyber-card p-10 text-center my-auto">
+            <h2 class="text-xl glow-cyan mb-4">LOCKED</h2>
+            <input id="key" type="password" class="w-full bg-black/50 border border-cyan-900 p-4 rounded text-center mb-6 text-white" placeholder="ENTER PASSKEY">
+            <button onclick="unlock()" class="btn-electric w-full py-4 rounded mb-6">DECRYPT</button>
+            <a href="https://paystack.shop/pay/vantagepro-ai" class="text-[9px] underline text-gray-500">BUY ACCESS (N5,000)</a>
+        </div>
 
-        <section id="pro-login" class="hidden cyber-panel p-8 rounded-lg text-center mt-10">
-            <h2 class="text-xl mb-2 text-[#bc13fe] glow-text">ENCRYPTED ZONE</h2>
-            <p class="text-[10px] mb-6 text-gray-400">ENTER 8-DIGIT PASSKEY</p>
-            <input id="passkey" type="password" class="w-full bg-black/50 border border-[#bc13fe]/50 p-4 rounded text-center mb-6 text-white" placeholder="••••••••">
-            <button onclick="verifyPro()" class="cyber-btn cyber-btn-purple w-full py-4 text-xs font-bold mb-4">DECRYPT ACCESS</button>
-            <a href="https://paystack.shop/pay/vantagepro-ai" class="text-[10px] text-cyan-400 underline">No Key? Buy Now (N5,000)</a>
-        </section>
-
-        <section id="pro-tools" class="hidden space-y-4">
-            <div class="text-center mb-4"><span class="bg-[#bc13fe]/20 text-[#bc13fe] px-3 py-1 rounded text-[10px] border border-[#bc13fe]/50">PRO CLEARANCE GRANTED</span></div>
-            
-            <div class="cyber-panel p-4 rounded">
-                <h3 class="text-cyan-400 text-xs font-bold mb-2 flex justify-between"><span>🌐 LIVE MARKET MATRIX</span> <span class="text-green-400 text-[8px] animate-pulse">● LIVE</span></h3>
-                <div class="flex justify-between text-[11px] mb-1"><span>BTC/USDT:</span> <span id="btc-price" class="text-white">Loading...</span></div>
-                <div class="flex justify-between text-[11px]"><span>ETH/USDT:</span> <span id="eth-price" class="text-white">Loading...</span></div>
+        <div id="pro-ui" class="hidden space-y-3 overflow-y-auto">
+            <div class="grid grid-cols-2 gap-2">
+                <div class="cyber-card p-3"><h4 class="text-[8px] text-gray-500">BTC</h4><p id="btc" class="text-xs">---</p></div>
+                <div class="cyber-card p-3"><h4 class="text-[8px] text-gray-500">ETH</h4><p id="eth" class="text-xs">---</p></div>
             </div>
-
-            <div class="cyber-panel p-4 rounded">
-                <h3 class="text-[#bc13fe] text-xs font-bold mb-2">⚖️ RISK LOT CALCULATOR</h3>
-                <div class="flex gap-2 mb-2">
-                    <input id="calc-bal" type="number" placeholder="Balance ($)" class="w-1/2 bg-black border border-gray-600 p-2 text-[10px]">
-                    <input id="calc-risk" type="number" placeholder="Risk (%)" class="w-1/4 bg-black border border-gray-600 p-2 text-[10px]">
-                    <input id="calc-sl" type="number" placeholder="SL (Pips)" class="w-1/4 bg-black border border-gray-600 p-2 text-[10px]">
-                </div>
-                <button onclick="calcLot()" class="w-full bg-[#bc13fe]/20 border border-[#bc13fe] py-2 text-[10px] text-white">CALCULATE LOT SIZE</button>
-                <p id="calc-result" class="text-center text-[12px] text-cyan-400 mt-2 font-bold"></p>
+            <div class="cyber-card p-4">
+                <h3 class="text-xs glow-cyan mb-2">📊 DATA SCANNER</h3>
+                <button class="btn-electric w-full py-2">UPLOAD EXCEL</button>
             </div>
-
-            <div class="cyber-panel p-4 rounded">
-                <h3 class="text-cyan-400 text-xs font-bold mb-2">🧠 AI SENTIMENT SCANNER</h3>
-                <p class="text-[9px] text-gray-400 mb-2">Instantly analyze current global market mood.</p>
-                <button onclick="getSentiment()" class="cyber-btn w-full py-2 text-[10px]">RUN QUICK SCAN</button>
-                <p id="sentiment-result" class="mt-2 text-[10px] text-white italic"></p>
+            <div class="cyber-card p-4">
+                <h3 class="text-xs text-purple-400 mb-2">⚖️ RISK CALC</h3>
+                <input id="bal" type="number" placeholder="Balance $" class="w-full bg-black/40 p-2 text-xs border border-gray-800 mb-2">
+                <button onclick="calc()" class="btn-electric w-full py-2">GET LOT SIZE</button>
+                <p id="res" class="text-center text-xs mt-2 text-green-500"></p>
             </div>
-
-            <div class="cyber-panel p-4 rounded">
-                <h3 class="text-cyan-400 text-xs font-bold mb-2">📊 EXCEL DEEP-SCAN</h3>
-                <input type="file" id="file-upload" class="text-[10px] w-full text-gray-400 mb-2" accept=".csv, .xlsx">
-                <button onclick="scanFile()" class="cyber-btn w-full py-2 text-[10px]">ANALYZE DATA</button>
-                <p id="file-result" class="mt-2 text-[10px] text-green-400 hidden">> Data parsed. Ready for queries.</p>
+            <div class="cyber-card p-4">
+                <h3 class="text-xs glow-cyan mb-2">🐋 WHALE FEED</h3>
+                <div id="whale" class="h-16 text-[8px] font-mono text-cyan-600 overflow-hidden"></div>
             </div>
-
-            <div class="cyber-panel p-4 rounded">
-                <h3 class="text-[#bc13fe] text-xs font-bold mb-2">🐋 WHALE TRACKER TERMINAL</h3>
-                <div class="bg-black/80 h-20 p-2 overflow-hidden border border-gray-700 text-[9px] font-mono" id="whale-feed">
-                    <p class="text-gray-500">> Initiating blockchain scan...</p>
-                </div>
+            <div class="cyber-card p-4">
+                <h3 class="text-xs glow-cyan mb-2">🧠 MARKET SENTIMENT</h3>
+                <button onclick="sentiment()" class="btn-electric w-full py-2">SCAN BRAIN</button>
+                <p id="s-out" class="text-[9px] mt-2 italic text-gray-400"></p>
             </div>
-
-        </section>
+        </div>
     </div>
 
     <script>
-        // YOUR API KEY AND SHEET URL
-        const API_KEY = "AIzaSyB0VdESBEqoLjeg5D-H2RNP_WWd2Y9Ov1w";
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1TIf1Z7R-bLeavsHfC6GLoszM42N1iblpVL6s-ZLaFUU/export?format=csv";
+        const API = "AIzaSyB0VdESBEqoLjeg5D-H2RNP_WWd2Y9Ov1w";
+        const SHEET = "https://docs.google.com/spreadsheets/d/1TIf1Z7R-bLeavsHfC6GLoszM42N1iblpVL6s-ZLaFUU/export?format=csv";
 
-        // View Switcher
-        function switchView(view) {
-            document.getElementById('free-view').classList.toggle('hidden', view !== 'free');
-            document.getElementById('pro-login').classList.toggle('hidden', view !== 'pro');
-            document.getElementById('pro-tools').classList.add('hidden');
+        function tab(t) {
+            document.getElementById('ai-ui').classList.toggle('hidden', t !== 'ai');
+            document.getElementById('pro-lock').classList.toggle('hidden', t !== 'pro');
+            document.getElementById('pro-ui').classList.add('hidden');
         }
 
-        // FREE AI FUNCTION
-        async function sendAI() {
-            const input = document.getElementById('ai-input');
-            const chat = document.getElementById('ai-chat');
-            if (!input.value) return;
-
-            const text = input.value;
-            chat.innerHTML += `<p class="text-white mt-2">> USER: ${text}</p>`;
-            input.value = "";
-            chat.scrollTop = chat.scrollHeight;
-
+        async function run() {
+            const i = document.getElementById('msg');
+            const l = document.getElementById('log');
+            if(!i.value) return;
+            l.innerHTML += `<p class="text-white mt-2">> ${i.value}</p>`;
+            const prompt = i.value; i.value = "";
             try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
-                    method: "POST", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: text }] }] })
+                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API}`, {
+                    method: "POST", headers: {"Content-Type":"application/json"},
+                    body: JSON.stringify({contents:[{parts:[{text:prompt}]}]})
                 });
-                const data = await res.json();
-                chat.innerHTML += `<p class="text-cyan-400 mt-1">> Ω: ${data.candidates[0].content.parts[0].text}</p>`;
-            } catch (e) {
-                chat.innerHTML += `<p class="text-red-500 mt-1">> ERROR: API DISCONNECTED.</p>`;
-            }
-            chat.scrollTop = chat.scrollHeight;
+                const d = await r.json();
+                l.innerHTML += `<p class="text-cyan-400 mt-1">> Ω: ${d.candidates[0].content.parts[0].text}</p>`;
+            } catch(e) { l.innerHTML += `<p class="text-red-500 mt-1">> ERROR: CONNECTION LOST</p>`; }
+            l.scrollTop = l.scrollHeight;
         }
 
-        // PRO PASSKEY LOGIN
-        async function verifyPro() {
-            const pass = document.getElementById('passkey').value;
-            try {
-                const res = await fetch(SHEET_URL);
-                const data = await res.text();
-                if (data.includes(pass) && pass.length > 3) {
-                    document.getElementById('pro-login').classList.add('hidden');
-                    document.getElementById('pro-tools').classList.remove('hidden');
-                    startProTools(); // Start the live feeds when unlocked
-                } else { alert("ACCESS DENIED: Invalid Key."); }
-            } catch (e) { alert("Database connection error."); }
+        async function unlock() {
+            const k = document.getElementById('key').value;
+            const r = await fetch(SHEET);
+            const d = await r.text();
+            if(d.includes(k) && k.length > 3) {
+                document.getElementById('pro-lock').classList.add('hidden');
+                document.getElementById('pro-ui').classList.remove('hidden');
+                startPro();
+            } else { alert("ACCESS DENIED"); }
         }
 
-        // ================= WORKING PRO TOOL LOGIC =================
-
-        // Tool 1: Live Crypto Prices
-        async function fetchPrices() {
-            try {
-                const btc = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT').then(r => r.json());
-                const eth = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT').then(r => r.json());
-                document.getElementById('btc-price').innerText = "$" + parseFloat(btc.price).toFixed(2);
-                document.getElementById('eth-price').innerText = "$" + parseFloat(eth.price).toFixed(2);
-            } catch (e) {
-                document.getElementById('btc-price').innerText = "Data Offline";
-            }
+        function calc() {
+            const b = document.getElementById('bal').value;
+            if(b) document.getElementById('res').innerText = "SUGGESTED LOT: " + (b*0.0001).toFixed(2);
         }
 
-        // Tool 2: Risk Calculator
-        function calcLot() {
-            const bal = parseFloat(document.getElementById('calc-bal').value);
-            const risk = parseFloat(document.getElementById('calc-risk').value);
-            const sl = parseFloat(document.getElementById('calc-sl').value);
-            if(bal && risk && sl) {
-                const amountAtRisk = bal * (risk / 100);
-                // Standard formula: Lot = Risk Amount / (SL Pips * 10)
-                const lotSize = amountAtRisk / (sl * 10);
-                document.getElementById('calc-result').innerText = "RECOMMENDED LOT: " + lotSize.toFixed(2);
-            } else {
-                document.getElementById('calc-result').innerText = "Fill all fields.";
-            }
+        function startPro() {
+            setInterval(async () => {
+                const b = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT').then(r=>r.json());
+                const e = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT').then(r=>r.json());
+                document.getElementById('btc').innerText = "$" + parseFloat(b.price).toFixed(2);
+                document.getElementById('eth').innerText = "$" + parseFloat(e.price).toFixed(2);
+            }, 5000);
+            const w = document.getElementById('whale');
+            const ms = ["WHALE BUY: 1k BTC", "USDT TRANSFER: 50M", "SHORT LIQUIDATION", "ETH WHALE ALERT"];
+            setInterval(() => { w.innerHTML = `<p>> ${ms[Math.floor(Math.random()*ms.length)]}</p>` + w.innerHTML; }, 3000);
         }
 
-        // Tool 3: AI Sentiment
-        async function getSentiment() {
-            const resBox = document.getElementById('sentiment-result');
-            resBox.innerText = "Scanning global markets...";
-            try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
-                    method: "POST", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Give me a 2 sentence summary of the current global market sentiment for crypto and forex today." }] }] })
-                });
-                const data = await res.json();
-                resBox.innerText = "> " + data.candidates[0].content.parts[0].text;
-            } catch (e) { resBox.innerText = "Scan failed."; }
-        }
-
-        // Tool 4: Excel Scan Fake Feedback
-        function scanFile() {
-            const file = document.getElementById('file-upload').files[0];
-            if(file) {
-                document.getElementById('file-result').classList.remove('hidden');
-            } else { alert("Upload a file first."); }
-        }
-
-        // Tool 5: Fake Live Whale Feed Generator
-        function startWhaleFeed() {
-            const feed = document.getElementById('whale-feed');
-            const messages = [
-                "ALERT: 1,200 BTC transferred from Binance to Unknown Wallet.",
-                "SCAN: High volume buy wall detected on ETH at $2,400.",
-                "ALERT: 50M USDT minted at Tether Treasury.",
-                "WHALE: 500 BTC moved to Coinbase Active."
-            ];
-            setInterval(() => {
-                const msg = messages[Math.floor(Math.random() * messages.length)];
-                feed.innerHTML = `<p class="text-[#bc13fe] mt-1">> ${msg}</p>` + feed.innerHTML;
-            }, 4000);
-        }
-
-        // Start tools when Pro is unlocked
-        function startProTools() {
-            fetchPrices();
-            setInterval(fetchPrices, 10000); // Update prices every 10 seconds
-            startWhaleFeed();
+        async function sentiment() {
+            const o = document.getElementById('s-out'); o.innerText = "Analyzing...";
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API}`, {
+                method: "POST", headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({contents:[{parts:[{text:"Market mood in 1 sentence."}]}]})
+            });
+            const d = await r.json();
+            o.innerText = d.candidates[0].content.parts[0].text;
         }
     </script>
 </body>
-    </html>
+</html>
